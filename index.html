@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Americano Padel Scoreboard</title>
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 12px;
+      font-family: Arial, sans-serif;
+      background: #f4f6f8;
+      color: #111827;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .box {
+      background: #ffffff;
+      border: 1px solid #e5e7eb;
+      border-radius: 14px;
+      padding: 14px;
+      margin-bottom: 14px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+
+    h1 {
+      margin: 0 0 8px 0;
+      font-size: 26px;
+    }
+
+    h2 {
+      margin: 0 0 12px 0;
+      font-size: 21px;
+    }
+
+    p {
+      margin: 0;
+      color: #4b5563;
+      line-height: 1.45;
+    }
+
+    .table-wrap {
+      width: 100%;
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #ffffff;
+      min-width: 760px;
+    }
+
+    th, td {
+      border: 1px solid #d1d5db;
+      padding: 9px;
+      text-align: center;
+      font-size: 14px;
+    }
+
+    th {
+      background: #f3f4f6;
+      font-weight: 700;
+    }
+
+    input {
+      width: 54px;
+      padding: 8px;
+      text-align: center;
+      font-size: 18px;
+      font-weight: 700;
+      border: 1px solid #9ca3af;
+      border-radius: 8px;
+      background: #ffffff;
+    }
+
+    button {
+      margin-top: 12px;
+      margin-right: 8px;
+      padding: 10px 14px;
+      border: none;
+      border-radius: 10px;
+      background: #111827;
+      color: white;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    button.secondary {
+      background: #e5e7eb;
+      color: #111827;
+    }
+
+    .ok {
+      color: #047857;
+      font-weight: 700;
+    }
+
+    .bad {
+      color: #dc2626;
+      font-weight: 700;
+    }
+
+    .empty {
+      color: #6b7280;
+    }
+
+    .leader {
+      background: #ecfdf5;
+      font-weight: 700;
+    }
+
+    .note {
+      margin-top: 10px;
+      font-size: 13px;
+      color: #6b7280;
+    }
+
+    @media (max-width: 600px) {
+      body { padding: 8px; }
+      .box { padding: 12px; }
+      h1 { font-size: 23px; }
+      h2 { font-size: 19px; }
+      th, td { padding: 8px; font-size: 13px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <div class="box">
+      <h1>Americano Padel Scoreboard</h1>
+      <p>
+        Players: Nika, Irakli, Iska, Gio, Levani.<br>
+        Rule: each round is <b>1 set</b>. Each set has exactly <b>3 games</b>.<br>
+        Valid scores: <b>3–0, 2–1, 1–2, 0–3</b>.
+      </p>
+      <button onclick="calculateScores()">Calculate Scores</button>
+      <button class="secondary" onclick="resetScores()">Reset</button>
+      <p class="note">For GitHub Pages, upload this file and rename it to <b>index.html</b>.</p>
+    </div>
+
+    <div class="box">
+      <h2>Rounds & Scores</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Round</th>
+              <th>Team 1</th>
+              <th>Team 1 Score</th>
+              <th>Team 2</th>
+              <th>Team 2 Score</th>
+              <th>Rest</th>
+              <th>Game Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td>Levani + Irakli</td>
+              <td><input id="r1a" type="number" min="0" max="3" /></td>
+              <td>Iska + Nika</td>
+              <td><input id="r1b" type="number" min="0" max="3" /></td>
+              <td>Gio</td>
+              <td id="status1" class="empty">Not played</td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>Levani + Gio</td>
+              <td><input id="r2a" type="number" min="0" max="3" /></td>
+              <td>Irakli + Iska</td>
+              <td><input id="r2b" type="number" min="0" max="3" /></td>
+              <td>Nika</td>
+              <td id="status2" class="empty">Not played</td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td>Levani + Nika</td>
+              <td><input id="r3a" type="number" min="0" max="3" /></td>
+              <td>Gio + Irakli</td>
+              <td><input id="r3b" type="number" min="0" max="3" /></td>
+              <td>Iska</td>
+              <td id="status3" class="empty">Not played</td>
+            </tr>
+            <tr>
+              <td>4</td>
+              <td>Levani + Iska</td>
+              <td><input id="r4a" type="number" min="0" max="3" /></td>
+              <td>Nika + Gio</td>
+              <td><input id="r4b" type="number" min="0" max="3" /></td>
+              <td>Irakli</td>
+              <td id="status4" class="empty">Not played</td>
+            </tr>
+            <tr>
+              <td>5</td>
+              <td>Irakli + Nika</td>
+              <td><input id="r5a" type="number" min="0" max="3" /></td>
+              <td>Iska + Gio</td>
+              <td><input id="r5b" type="number" min="0" max="3" /></td>
+              <td>Levani</td>
+              <td id="status5" class="empty">Not played</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="box">
+      <h2>Player Scores</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Place</th>
+              <th>Player</th>
+              <th>Total Points</th>
+              <th>Sets Played</th>
+              <th>Set Wins</th>
+              <th>Set Losses</th>
+            </tr>
+          </thead>
+          <tbody id="playerScores"></tbody>
+        </table>
+      </div>
+      <p class="note">
+        Points are individual: if a team wins 2 games in the set, both players get 2 points.
+        The other team gets 1 point.
+      </p>
+    </div>
+
+  </div>
+
+  <script>
+    const rounds = [
+      { id: 1, a: "r1a", b: "r1b", teamA: ["Levani", "Irakli"], teamB: ["Iska", "Nika"], nameA: "Levani + Irakli", nameB: "Iska + Nika" },
+      { id: 2, a: "r2a", b: "r2b", teamA: ["Levani", "Gio"], teamB: ["Irakli", "Iska"], nameA: "Levani + Gio", nameB: "Irakli + Iska" },
+      { id: 3, a: "r3a", b: "r3b", teamA: ["Levani", "Nika"], teamB: ["Gio", "Irakli"], nameA: "Levani + Nika", nameB: "Gio + Irakli" },
+      { id: 4, a: "r4a", b: "r4b", teamA: ["Levani", "Iska"], teamB: ["Nika", "Gio"], nameA: "Levani + Iska", nameB: "Nika + Gio" },
+      { id: 5, a: "r5a", b: "r5b", teamA: ["Irakli", "Nika"], teamB: ["Iska", "Gio"], nameA: "Irakli + Nika", nameB: "Iska + Gio" }
+    ];
+
+    const players = ["Nika", "Irakli", "Iska", "Gio", "Levani"];
+
+    function getScore(id) {
+      const element = document.getElementById(id);
+      const value = element.value.trim();
+
+      if (value === "") {
+        return null;
+      }
+
+      const numberValue = Number(value);
+
+      if (!Number.isInteger(numberValue)) {
+        return NaN;
+      }
+
+      return numberValue;
+    }
+
+    function setStatus(roundId, text, className) {
+      const status = document.getElementById("status" + roundId);
+      status.textContent = text;
+      status.className = className;
+    }
+
+    function createEmptyStats() {
+      const stats = {};
+      players.forEach(player => {
+        stats[player] = {
+          player: player,
+          points: 0,
+          played: 0,
+          wins: 0,
+          losses: 0
+        };
+      });
+      return stats;
+    }
+
+    function addTeamStats(stats, team, points, isWinner) {
+      team.forEach(player => {
+        stats[player].points += points;
+        stats[player].played += 1;
+
+        if (isWinner) {
+          stats[player].wins += 1;
+        } else {
+          stats[player].losses += 1;
+        }
+      });
+    }
+
+    function calculateScores() {
+      const stats = createEmptyStats();
+
+      rounds.forEach(round => {
+        const scoreA = getScore(round.a);
+        const scoreB = getScore(round.b);
+
+        if (scoreA === null && scoreB === null) {
+          setStatus(round.id, "Not played", "empty");
+          return;
+        }
+
+        if (scoreA === null || scoreB === null) {
+          setStatus(round.id, "Enter both scores", "bad");
+          return;
+        }
+
+        if (
+          Number.isNaN(scoreA) ||
+          Number.isNaN(scoreB) ||
+          scoreA < 0 ||
+          scoreA > 3 ||
+          scoreB < 0 ||
+          scoreB > 3 ||
+          scoreA + scoreB !== 3
+        ) {
+          setStatus(round.id, "Invalid: total must be 3", "bad");
+          return;
+        }
+
+        if (scoreA > scoreB) {
+          setStatus(round.id, round.nameA + " won " + scoreA + "–" + scoreB, "ok");
+          addTeamStats(stats, round.teamA, scoreA, true);
+          addTeamStats(stats, round.teamB, scoreB, false);
+        } else {
+          setStatus(round.id, round.nameB + " won " + scoreB + "–" + scoreA, "ok");
+          addTeamStats(stats, round.teamA, scoreA, false);
+          addTeamStats(stats, round.teamB, scoreB, true);
+        }
+      });
+
+      const sortedPlayers = Object.values(stats).sort((a, b) => {
+        return (
+          b.points - a.points ||
+          b.wins - a.wins ||
+          a.losses - b.losses ||
+          a.player.localeCompare(b.player)
+        );
+      });
+
+      const body = document.getElementById("playerScores");
+      body.innerHTML = "";
+
+      sortedPlayers.forEach((player, index) => {
+        const row = document.createElement("tr");
+
+        if (index === 0) {
+          row.className = "leader";
+        }
+
+        row.innerHTML =
+          "<td>" + (index + 1) + "</td>" +
+          "<td>" + player.player + "</td>" +
+          "<td><b>" + player.points + "</b></td>" +
+          "<td>" + player.played + "</td>" +
+          "<td>" + player.wins + "</td>" +
+          "<td>" + player.losses + "</td>";
+
+        body.appendChild(row);
+      });
+
+      saveScores();
+    }
+
+    function saveScores() {
+      const data = {};
+      rounds.forEach(round => {
+        data[round.a] = document.getElementById(round.a).value;
+        data[round.b] = document.getElementById(round.b).value;
+      });
+      localStorage.setItem("americanoPadelScoresOneSetThreeGames", JSON.stringify(data));
+    }
+
+    function loadScores() {
+      try {
+        const data = JSON.parse(localStorage.getItem("americanoPadelScoresOneSetThreeGames") || "{}");
+
+        rounds.forEach(round => {
+          if (data[round.a] !== undefined) {
+            document.getElementById(round.a).value = data[round.a];
+          }
+
+          if (data[round.b] !== undefined) {
+            document.getElementById(round.b).value = data[round.b];
+          }
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    function resetScores() {
+      const confirmed = confirm("Reset all scores?");
+      if (!confirmed) return;
+
+      rounds.forEach(round => {
+        document.getElementById(round.a).value = "";
+        document.getElementById(round.b).value = "";
+      });
+
+      localStorage.removeItem("americanoPadelScoresOneSetThreeGames");
+      calculateScores();
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+      rounds.forEach(round => {
+        document.getElementById(round.a).addEventListener("input", calculateScores);
+        document.getElementById(round.b).addEventListener("input", calculateScores);
+      });
+
+      loadScores();
+      calculateScores();
+    });
+  </script>
+</body>
+</html>
